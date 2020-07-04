@@ -19,7 +19,7 @@ def main():
     # 开始游戏的主循环
     while True:
         # 监听键盘和鼠标事件
-        gf.check_events(fighter)
+        gf.check_events(sets, screen, fighter)
         gf.update_screen(screen, sets, fighter)
 
 

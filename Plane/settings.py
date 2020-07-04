@@ -1,5 +1,6 @@
 import pygame
 
+
 class Settings():
     """这是一个关于游戏配置项的类"""
 
@@ -12,3 +13,5 @@ class Settings():
 
         self.bg_img = pygame.image.load('images/background.png')
         self.bg_img_rect = self.bg_img.get_rect()
+        self.bullet_list = []
+        self.bullet_max_num = 5

@@ -1,5 +1,6 @@
 import pygame
 
+
 class Ship():
     """这是一个关于战斗机的类"""
 
