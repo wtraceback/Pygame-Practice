@@ -14,7 +14,6 @@ def main():
     pygame.display.set_caption(sets.caption)
 
     fighter = ship.Ship(screen)
-    bg_img = pygame.image.load('images/background.png')
 
     # 开始游戏的主循环
     while True:
@@ -22,11 +21,25 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    fighter.moving_left = True
+                elif event.key == pygame.K_RIGHT:
+                    fighter.moving_right = True
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    fighter.moving_left = False
+
+                elif event.key == pygame.K_RIGHT:
+                    fighter.moving_right = False
 
         # 绘制背景图
-        screen.blit(bg_img, bg_img.get_rect())
+        screen.blit(sets.bg_img, sets.bg_img.get_rect())
 
         # 绘制战斗机
+        fighter.update_coordinate()
         fighter.blit_img()
 
         # 重新绘制游戏窗口
