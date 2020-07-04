@@ -11,3 +11,4 @@ class Settings():
         self.caption = "Plane War"
 
         self.bg_img = pygame.image.load('images/background.png')
+        self.bg_img_rect = self.bg_img.get_rect()
