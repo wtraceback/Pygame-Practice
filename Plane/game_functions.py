@@ -2,6 +2,7 @@ import sys
 import pygame
 
 from bullet import Bullet
+from enemy import Enemy
 
 
 def check_events(sets, screen, fighter):
@@ -35,17 +36,20 @@ def  check_keyup_events(event, fighter):
         fighter.moving_right = False
 
 
-def blit_bg_image(screen, sets):
+def blit_bg_image(sets, screen):
     screen.blit(sets.bg_img, sets.bg_img_rect)
 
 
-def update_screen(screen, sets, fighter):
+def update_screen(sets, screen, fighter):
     # 绘制背景图
-    blit_bg_image(screen, sets)
+    blit_bg_image(sets, screen)
 
     # 绘制战斗机
     fighter.update_coordinate()
     fighter.blit_img()
+
+    # # 绘制敌人战机
+    blit_enemy_fleet(sets)
 
     # 更新子弹的坐标以及绘制子弹
     update_bullets(sets)
@@ -66,5 +70,25 @@ def update_bullets(sets):
 
 def fire_bullet(sets, screen, fighter):
     if len(sets.bullet_list) < sets.bullet_max_num:
-        new_bullet = Bullet(screen, fighter)
+        new_bullet = Bullet(sets, screen, fighter)
         sets.bullet_list.append(new_bullet)
+
+
+def create_enemy_fleet(sets, screen):
+    """创建敌人战机舰队"""
+    # 创建一个敌人战机，并计算每一行可容纳的战机个数
+    enemy_tool = Enemy(screen)
+    available_space_x = sets.screen_width - 2 * enemy_tool.rect.width
+    number_enemy_x = int(available_space_x / (2 * enemy_tool.rect.width))
+
+    # 创建第一行外星人
+    for enemy_number in range(number_enemy_x):
+        new_enemy = Enemy(screen)
+        x = new_enemy.rect.width + 2 * new_enemy.rect.width * enemy_number
+        new_enemy.rect.x = x
+        sets.enemy_list.append(new_enemy)
+
+
+def blit_enemy_fleet(sets):
+    for enemy in sets.enemy_list:
+        enemy.blit_img()

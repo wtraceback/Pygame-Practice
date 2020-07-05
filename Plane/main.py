@@ -14,13 +14,16 @@ def main():
     pygame.display.set_caption(sets.caption)
 
     # 创建一艘战斗机
-    fighter = Ship(screen)
+    fighter = Ship(sets, screen)
+
+    # 创建敌人战机舰队
+    gf.create_enemy_fleet(sets, screen)
 
     # 开始游戏的主循环
     while True:
         # 监听键盘和鼠标事件
         gf.check_events(sets, screen, fighter)
-        gf.update_screen(screen, sets, fighter)
+        gf.update_screen(sets, screen, fighter)
 
 
 if __name__ == "__main__":
