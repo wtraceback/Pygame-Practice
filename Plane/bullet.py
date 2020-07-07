@@ -16,9 +16,12 @@ class Bullet():
         self.rect.centerx = fighter.rect.centerx
         self.rect.centery = fighter.rect.top
 
+        # 子弹的飞行速度
+        self.speed_factor = self.sets.bullet_speed_factor
+
     def blit_img(self):
         """在指定位置绘制子弹"""
         self.screen.blit(self.img, self.rect)
 
     def update_coordinate(self):
-        self.rect.centery -= self.sets.bullet_speed_factor
+        self.rect.centery -= self.speed_factor

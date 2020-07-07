@@ -17,7 +17,7 @@ def main():
     fighter = Ship(sets, screen)
 
     # 创建敌人战机舰队
-    gf.create_enemy_fleet(sets, screen)
+    gf.create_enemy_fleet(sets, screen, fighter)
 
     # 开始游戏的主循环
     while True:

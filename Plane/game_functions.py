@@ -74,19 +74,45 @@ def fire_bullet(sets, screen, fighter):
         sets.bullet_list.append(new_bullet)
 
 
-def create_enemy_fleet(sets, screen):
+def create_enemy_fleet(sets, screen, fighter_tool):
     """创建敌人战机舰队"""
     # 创建一个敌人战机，并计算每一行可容纳的战机个数
     enemy_tool = Enemy(screen)
+    number_enemy_x = get_number_enemy_x(sets, enemy_tool)
+    number_enemy_rows = get_number_enemy_rows(sets, enemy_tool, fighter_tool)
+
+    # 创建第一行外星人
+    for enemy_row in range(number_enemy_rows):
+        for enemy_number in range(number_enemy_x):
+            create_enemy(sets, screen, enemy_number, enemy_row)
+        
+        
+def get_number_enemy_x(sets, enemy_tool):
+    # 计算每一行可容纳的战机个数
     available_space_x = sets.screen_width - 2 * enemy_tool.rect.width
     number_enemy_x = int(available_space_x / (2 * enemy_tool.rect.width))
 
-    # 创建第一行外星人
-    for enemy_number in range(number_enemy_x):
-        new_enemy = Enemy(screen)
-        x = new_enemy.rect.width + 2 * new_enemy.rect.width * enemy_number
-        new_enemy.rect.x = x
-        sets.enemy_list.append(new_enemy)
+    return number_enemy_x
+
+
+def get_number_enemy_rows(sets, enemy_tool, fighter_tool):
+    # 计算屏幕可容纳多少行敌人战机
+    available_space_y = sets.screen_height - 3 * enemy_tool.rect.height - fighter_tool.rect.height
+    number_enemy_rows = int(available_space_y / (2 * enemy_tool.rect.height))
+
+    return number_enemy_rows
+
+
+def create_enemy(sets, screen, enemy_number, enemy_row):
+    new_enemy = Enemy(screen)
+
+    # 设置响应的敌人战机的位置
+    x = new_enemy.rect.width + 2 * new_enemy.rect.width * enemy_number
+    new_enemy.rect.x = x
+    y = new_enemy.rect.height + 2 * new_enemy.rect.height * enemy_row
+    new_enemy.rect.y = y
+
+    sets.enemy_list.append(new_enemy)
 
 
 def blit_enemy_fleet(sets):

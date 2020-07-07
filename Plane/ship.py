@@ -15,6 +15,7 @@ class Ship():
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
 
+        self.speed_factor = self.sets.fighter_speed_factor
         self.moving_left = False
         self.moving_right = False
 
@@ -23,7 +24,7 @@ class Ship():
 
     def update_coordinate(self):
         if self.moving_left and self.rect.left > 0:
-            self.rect.centerx -= self.sets.fighter_speed_factor
+            self.rect.centerx -= self.speed_factor
 
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.rect.centerx += self.sets.fighter_speed_factor
+            self.rect.centerx += self.speed_factor
