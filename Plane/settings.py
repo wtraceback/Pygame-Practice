@@ -23,5 +23,8 @@ class Settings():
         self.bullet_list = []
         self.bullet_max_num = 5
 
-        # 敌人战机相关配置项
+        # 敌人战机相关配置项(移动速度、向下移动的速度、舰队移动的方向：右：+1 左：-1、战机舰队数组)
+        self.enemy_speed_factor = 1
+        self.enemy_drop_speed = 10
+        self.enemy_direction = 1
         self.enemy_list = []

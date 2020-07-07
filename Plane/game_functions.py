@@ -44,14 +44,16 @@ def update_screen(sets, screen, fighter):
     # 绘制背景图
     blit_bg_image(sets, screen)
 
-    # 绘制战斗机
+    # 更新战斗机的坐标并绘制战斗机
     fighter.update_coordinate()
     fighter.blit_img()
 
-    # # 绘制敌人战机
+    # 检测敌人战机是否到达屏幕边缘、更新敌人战机的坐标并绘制敌人战机
+    check_fleet_edges(sets)
+    update_enemy_fleet(sets)
     blit_enemy_fleet(sets)
 
-    # 更新子弹的坐标以及绘制子弹
+    # 更新子弹的坐标并绘制子弹
     update_bullets(sets)
 
     # 重新绘制游戏窗口
@@ -77,7 +79,7 @@ def fire_bullet(sets, screen, fighter):
 def create_enemy_fleet(sets, screen, fighter_tool):
     """创建敌人战机舰队"""
     # 创建一个敌人战机，并计算每一行可容纳的战机个数
-    enemy_tool = Enemy(screen)
+    enemy_tool = Enemy(sets, screen)
     number_enemy_x = get_number_enemy_x(sets, enemy_tool)
     number_enemy_rows = get_number_enemy_rows(sets, enemy_tool, fighter_tool)
 
@@ -104,7 +106,7 @@ def get_number_enemy_rows(sets, enemy_tool, fighter_tool):
 
 
 def create_enemy(sets, screen, enemy_number, enemy_row):
-    new_enemy = Enemy(screen)
+    new_enemy = Enemy(sets, screen)
 
     # 设置响应的敌人战机的位置
     x = new_enemy.rect.width + 2 * new_enemy.rect.width * enemy_number
@@ -115,6 +117,27 @@ def create_enemy(sets, screen, enemy_number, enemy_row):
     sets.enemy_list.append(new_enemy)
 
 
+def update_enemy_fleet(sets):
+    for enemy in sets.enemy_list:
+        enemy.update_coordinate()
+
+
 def blit_enemy_fleet(sets):
     for enemy in sets.enemy_list:
         enemy.blit_img()
+
+
+def check_fleet_edges(sets):
+    """如果有敌人战机到达边缘后，将采取相应的措施"""
+    for enemy in sets.enemy_list:
+        if enemy.check_edges():
+            change_fleet_direction(sets)
+            break
+
+
+def change_fleet_direction(sets):
+    """将所有的敌人战机向下移动，并且调整敌人战机的移动方向"""
+    for enemy in sets.enemy_list:
+        enemy.rect.y += sets.enemy_drop_speed
+
+    sets.enemy_direction *= (-1)
