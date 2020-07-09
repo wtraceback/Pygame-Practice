@@ -61,13 +61,18 @@ def update_screen(sets, screen, fighter):
 
 
 def update_bullets(sets):
-    # 更新子弹的坐标以及绘制子弹
+    # 更新子弹的坐标
     for b in sets.bullet_list:
         b.update_coordinate()
         if b.rect.bottom < 0:
             sets.bullet_list.remove(b)
-        else:
-            b.blit_img()
+
+    # 检测更新后的子弹是否集中敌人战机，如果有，就删除相应的子弹和敌人战机
+    collitions = list_collide(sets)
+
+    # 绘制子弹
+    for b in sets.bullet_list:
+        b.blit_img()
 
 
 def fire_bullet(sets, screen, fighter):
@@ -141,3 +146,44 @@ def change_fleet_direction(sets):
         enemy.rect.y += sets.enemy_drop_speed
 
     sets.enemy_direction *= (-1)
+    
+    
+def list_collide(sets):
+    """遍历所有的子弹，记录其中和敌机相撞的子弹与敌机"""
+    crashed = {}
+    for b in sets.bullet_list:
+        e = check_bullet_enemy_collide(b, sets)
+        if e:
+            crashed[b] = e
+            sets.bullet_list.remove(b)
+
+
+def check_bullet_enemy_collide(b, sets):
+    """判断子弹是否与某一架敌机相撞"""
+    crashed = []
+
+    for e in sets.enemy_list:
+        if collided(b, e):
+            crashed.append(e)
+            sets.enemy_list.remove(e)
+
+    return crashed
+
+
+def collided(b, e):
+    """两个矩形之间的碰撞检测"""
+    x1 = b.rect.x
+    y1 = b.rect.y
+    w1 = b.rect.w
+    h1 = b.rect.h
+
+    x2 = e.rect.x
+    y2 = e.rect.y
+    w2 = e.rect.w
+    h2 = e.rect.h
+
+    if (abs((x1 + w1 / 2) - (x2 + w2 / 2)) < abs((w1 + w2) / 2)):
+        if abs((y1 + h1 / 2) - (y2 + h2 / 2)) < abs((h1 + h2) / 2):
+            return True
+
+    return False
