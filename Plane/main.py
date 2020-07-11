@@ -8,7 +8,8 @@ import game_functions as gf
 def main():
     sets = Settings()
 
-    # pygame 初始化   创建一个屏幕对象（即游戏窗口，用于显示游戏元素）
+    # pygame 初始化
+    # 创建一个屏幕对象（即游戏窗口，用于显示游戏元素）
     pygame.init()
     screen = pygame.display.set_mode(sets.size)
     pygame.display.set_caption(sets.caption)
@@ -23,6 +24,17 @@ def main():
     while True:
         # 监听键盘和鼠标事件
         gf.check_events(sets, screen, fighter)
+
+        #更新战斗机的坐标
+        fighter.update_coordinate()
+
+        # 更新子弹的坐标，并且进行子弹和敌人战机的碰撞检测
+        gf.update_bullets_coordinate(sets)
+
+        # 检测敌人战机是否到达屏幕边缘、更新敌人战机的坐标
+        gf.update_enemy_fleet_coordinate(sets)
+
+        # 绘制背景图、绘制子弹、绘制战斗机、绘制敌人舰队、重新绘制游戏窗口
         gf.update_screen(sets, screen, fighter)
 
 
