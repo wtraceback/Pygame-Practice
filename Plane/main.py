@@ -29,7 +29,7 @@ def main():
         fighter.update_coordinate()
 
         # 更新子弹的坐标，并且进行子弹和敌人战机的碰撞检测
-        gf.update_bullets_coordinate(sets)
+        gf.update_bullets_coordinate(sets, screen, fighter)
 
         # 检测敌人战机是否到达屏幕边缘、更新敌人战机的坐标
         gf.update_enemy_fleet_coordinate(sets)

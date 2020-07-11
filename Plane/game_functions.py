@@ -64,18 +64,30 @@ def fire_bullet(sets, screen, fighter):
         sets.bullet_list.append(new_bullet)
 
 
-def update_bullets_coordinate(sets):
+def update_bullets_coordinate(sets, screen, fighter):
     # 更新子弹的坐标
     for b in sets.bullet_list:
         b.update_coordinate()
 
     # 删除超出边界的子弹
     for b in sets.bullet_list.copy():
-        if b.rect.bottom < 0:
+        if b.rect.bottom <= 0:
             sets.bullet_list.remove(b)
 
+    # 响应子弹和敌人战机的碰撞 & 敌人战机全部被击落后，重新创建敌人战机舰队
+    check_bullet_enemy_collisions(sets, screen, fighter)
+
+
+def check_bullet_enemy_collisions(sets, screen, fighter):
     # 检测更新后的子弹是否集中敌人战机，如果有，就删除相应的子弹和敌人战机
     collitions = list_collide(sets)
+
+    # 删除现有的子弹并重新创建敌人战机舰队
+    if len(sets.enemy_list) == 0:
+        for b in sets.bullet_list.copy():
+            sets.bullet_list.remove(b)
+
+        create_enemy_fleet(sets, screen, fighter)
 
 
 def list_collide(sets):
@@ -89,7 +101,7 @@ def list_collide(sets):
 
 
 def check_bullet_enemy_collide(b, sets):
-    """判断子弹是否与某一架敌机相撞"""
+    """判断子弹是否与敌机相撞(子弹有可能是大口径的，并非只能是单纯的小子弹)"""
     crashed = []
 
     for e in sets.enemy_list:
