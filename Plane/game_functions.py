@@ -1,5 +1,6 @@
 import sys
 import pygame
+from time import sleep
 
 from bullet import Bullet
 from enemy import Enemy
@@ -178,13 +179,17 @@ def create_enemy(sets, screen, enemy_number, enemy_row):
     sets.enemy_list.append(new_enemy)
 
 
-def update_enemy_fleet_coordinate(sets):
+def update_enemy_fleet_coordinate(sets, screen, stats, fighter):
     """检测敌人战机是否碰到左右边界"""
     check_fleet_edges(sets)
 
     # 更新敌人战机的坐标
     for enemy in sets.enemy_list:
         enemy.update_coordinate()
+
+    # 检测敌人战机和战斗机之间的碰撞
+    if check_fighter_enemy_collide(sets, fighter):
+        fighter_hit(sets, screen, stats, fighter)
 
 
 def check_fleet_edges(sets):
@@ -201,6 +206,37 @@ def change_fleet_direction(sets):
         enemy.rect.y += sets.enemy_drop_speed
 
     sets.enemy_direction *= (-1)
+
+
+def check_fighter_enemy_collide(sets, fighter):
+    for e in sets.enemy_list:
+        if collided(fighter, e):
+            return e
+
+    return None
+
+
+def fighter_hit(sets, screen, stats, fighter):
+    """响应被敌人战机撞到的飞船"""
+    # 将 战斗机 减一
+    stats.fighter_left -= 1
+
+    # 清空 子弹列表
+    for b in sets.bullet_list.copy():
+        sets.bullet_list.remove(b)
+
+    # 清空 敌人战机舰队列表
+    for e in sets.enemy_list.copy():
+        sets.enemy_list.remove(e)
+
+    # 创建新的敌人战机舰队
+    create_enemy_fleet(sets, screen, fighter)
+
+    # 将战斗机移动至画面正中央
+    fighter.center_fighter()
+    
+    # 暂停半秒，方便玩家反应过来
+    sleep(0.5)
 
 
 def blit_enemy_fleet_img(sets):

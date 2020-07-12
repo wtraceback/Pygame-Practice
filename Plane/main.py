@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 import game_functions as gf
+from game_stats import GameStats
 
 
 def main():
@@ -13,6 +14,9 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(sets.size)
     pygame.display.set_caption(sets.caption)
+
+    # 创建一个用于存储游戏统计信息的实例
+    stats = GameStats(sets)
 
     # 创建一艘战斗机
     fighter = Ship(sets, screen)
@@ -32,7 +36,7 @@ def main():
         gf.update_bullets_coordinate(sets, screen, fighter)
 
         # 检测敌人战机是否到达屏幕边缘、更新敌人战机的坐标
-        gf.update_enemy_fleet_coordinate(sets)
+        gf.update_enemy_fleet_coordinate(sets, screen, stats, fighter)
 
         # 绘制背景图、绘制子弹、绘制战斗机、绘制敌人舰队、重新绘制游戏窗口
         gf.update_screen(sets, screen, fighter)

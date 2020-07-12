@@ -17,6 +17,7 @@ class Settings():
 
         # 战斗机的速度
         self.fighter_speed_factor = 5
+        self.fighter_max_num = 3
 
         # 子弹相关配置项
         self.bullet_speed_factor = 3

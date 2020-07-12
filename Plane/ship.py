@@ -28,3 +28,6 @@ class Ship():
 
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.rect.centerx += self.speed_factor
+
+    def center_fighter(self):
+        self.rect.centerx = self.screen_rect.centerx
