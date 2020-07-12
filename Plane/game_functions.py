@@ -191,6 +191,9 @@ def update_enemy_fleet_coordinate(sets, screen, stats, fighter):
     if check_fighter_enemy_collide(sets, fighter):
         fighter_hit(sets, screen, stats, fighter)
 
+    # 检测是否有敌人战机到达了屏幕底端
+    check_enemy_arrive_bottom(sets, screen, stats, fighter)
+
 
 def check_fleet_edges(sets):
     """如果有敌人战机到达边缘后，将采取相应的措施"""
@@ -218,25 +221,37 @@ def check_fighter_enemy_collide(sets, fighter):
 
 def fighter_hit(sets, screen, stats, fighter):
     """响应被敌人战机撞到的飞船"""
-    # 将 战斗机 减一
-    stats.fighter_left -= 1
+    if stats.fighter_left > 0:
+        # 将 战斗机 减一
+        stats.fighter_left -= 1
 
-    # 清空 子弹列表
-    for b in sets.bullet_list.copy():
-        sets.bullet_list.remove(b)
+        # 清空 子弹列表
+        for b in sets.bullet_list.copy():
+            sets.bullet_list.remove(b)
 
-    # 清空 敌人战机舰队列表
-    for e in sets.enemy_list.copy():
-        sets.enemy_list.remove(e)
+        # 清空 敌人战机舰队列表
+        for e in sets.enemy_list.copy():
+            sets.enemy_list.remove(e)
 
-    # 创建新的敌人战机舰队
-    create_enemy_fleet(sets, screen, fighter)
+        # 创建新的敌人战机舰队
+        create_enemy_fleet(sets, screen, fighter)
 
-    # 将战斗机移动至画面正中央
-    fighter.center_fighter()
-    
-    # 暂停半秒，方便玩家反应过来
-    sleep(0.5)
+        # 将战斗机移动至画面正中央
+        fighter.center_fighter()
+
+        # 暂停半秒，方便玩家反应过来
+        sleep(0.5)
+    else:
+        stats.game_active = False
+
+
+def check_enemy_arrive_bottom(sets, screen, stats, fighter):
+    """检查是否有敌人战机到达了屏幕底端"""
+    screen_rect = screen.get_rect()
+    for e in sets.enemy_list:
+        if e.rect.bottom >= screen_rect.bottom:
+            fighter_hit(sets, screen, stats, fighter)
+            break
 
 
 def blit_enemy_fleet_img(sets):
