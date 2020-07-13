@@ -6,7 +6,7 @@ from bullet import Bullet
 from enemy import Enemy
 
 
-def check_events(sets, screen, fighter):
+def check_events(sets, screen, stats, fighter, start_butn):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -15,6 +15,9 @@ def check_events(sets, screen, fighter):
             check_keydown_events(event, sets, screen, fighter)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, fighter)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            check_click_start_butn(stats, start_butn, pos)
 
 
 def check_keydown_events(event, sets, screen, fighter):
@@ -37,7 +40,22 @@ def  check_keyup_events(event, fighter):
         fighter.moving_right = False
 
 
-def update_screen(sets, screen, fighter):
+def check_click_start_butn(stats, start_butn, pos):
+    """点击了开始按钮后，将开始游戏"""
+    if start_butn.rect.collidepoint(pos[0], pos[1]):
+        stats.game_active = True
+
+
+# def collidepoint(stats, start_butn, pos):
+#     mouse_x = pos[0]
+#     mouse_y = pos[1]
+#
+#     if start_butn.rect.x <= mouse_x and mouse_x <= start_butn.rect.x + start_butn.rect.w:
+#         if start_butn.rect.y <= mouse_y and mouse_y <= start_butn.rect.y + start_butn.rect.h:
+#             stats.game_active = True
+
+
+def update_screen(sets, screen, stats, fighter, start_butn):
     # 绘制背景图
     blit_bg_image(sets, screen)
 
@@ -49,6 +67,9 @@ def update_screen(sets, screen, fighter):
 
     # 绘制敌人舰队
     blit_enemy_fleet_img(sets)
+
+    if not stats.game_active:
+        start_butn.draw_butn()
 
     # 重新绘制游戏窗口
     pygame.display.update()

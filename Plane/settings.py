@@ -29,3 +29,6 @@ class Settings():
         self.enemy_drop_speed = 10
         self.enemy_direction = 1
         self.enemy_list = []
+
+        # 开始按钮信息
+        self.start_butn_text = 'Start'

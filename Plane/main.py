@@ -4,6 +4,7 @@ from settings import Settings
 from ship import Ship
 import game_functions as gf
 from game_stats import GameStats
+from button import Button
 
 
 def main():
@@ -18,6 +19,9 @@ def main():
     # 创建一个用于存储游戏统计信息的实例
     stats = GameStats(sets)
 
+    # 创建开始按钮
+    start_butn = Button(sets, screen)
+
     # 创建一艘战斗机
     fighter = Ship(sets, screen)
 
@@ -27,7 +31,7 @@ def main():
     # 开始游戏的主循环
     while True:
         # 监听键盘和鼠标事件
-        gf.check_events(sets, screen, fighter)
+        gf.check_events(sets, screen, stats, fighter, start_butn)
 
         if stats.game_active:
             #更新战斗机的坐标
@@ -40,7 +44,7 @@ def main():
             gf.update_enemy_fleet_coordinate(sets, screen, stats, fighter)
 
         # 绘制背景图、绘制子弹、绘制战斗机、绘制敌人舰队、重新绘制游戏窗口
-        gf.update_screen(sets, screen, fighter)
+        gf.update_screen(sets, screen, stats, fighter, start_butn)
 
 
 if __name__ == "__main__":
