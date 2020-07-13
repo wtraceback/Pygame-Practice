@@ -17,7 +17,7 @@ def check_events(sets, screen, stats, fighter, start_butn):
             check_keyup_events(event, fighter)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
-            check_click_start_butn(stats, start_butn, pos)
+            check_click_start_butn(sets, screen, stats, fighter, start_butn, pos)
 
 
 def check_keydown_events(event, sets, screen, fighter):
@@ -40,10 +40,30 @@ def  check_keyup_events(event, fighter):
         fighter.moving_right = False
 
 
-def check_click_start_butn(stats, start_butn, pos):
+def check_click_start_butn(sets, screen, stats, fighter, start_butn, pos):
     """点击了开始按钮后，将开始游戏"""
-    if start_butn.rect.collidepoint(pos[0], pos[1]):
+    butn_clicked = start_butn.rect.collidepoint(pos[0], pos[1])
+    if butn_clicked and not stats.game_active:
+        # 隐藏光标
+        pygame.mouse.set_visible(False)
+
+        # 重置统计信息
         stats.game_active = True
+        stats.reset_stats()
+
+        # 清空 子弹列表
+        for b in sets.bullet_list.copy():
+            sets.bullet_list.remove(b)
+
+        # 清空 敌人战机舰队列表
+        for e in sets.enemy_list.copy():
+            sets.enemy_list.remove(e)
+
+        # 创建新的敌人战机舰队
+        create_enemy_fleet(sets, screen, fighter)
+
+        # 将战斗机移动至画面正中央
+        fighter.center_fighter()
 
 
 # def collidepoint(stats, start_butn, pos):
@@ -53,6 +73,8 @@ def check_click_start_butn(stats, start_butn, pos):
 #     if start_butn.rect.x <= mouse_x and mouse_x <= start_butn.rect.x + start_butn.rect.w:
 #         if start_butn.rect.y <= mouse_y and mouse_y <= start_butn.rect.y + start_butn.rect.h:
 #             stats.game_active = True
+#
+#     return False
 
 
 def update_screen(sets, screen, stats, fighter, start_butn):
@@ -264,6 +286,7 @@ def fighter_hit(sets, screen, stats, fighter):
         sleep(0.5)
     else:
         stats.game_active = False
+        pygame.mouse.set_visible(True)
 
 
 def check_enemy_arrive_bottom(sets, screen, stats, fighter):
