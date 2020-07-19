@@ -44,6 +44,9 @@ def check_click_start_butn(sets, screen, stats, fighter, start_butn, pos):
     """点击了开始按钮后，将开始游戏"""
     butn_clicked = start_butn.rect.collidepoint(pos[0], pos[1])
     if butn_clicked and not stats.game_active:
+        # 重置 子弹、敌人战机、战斗机 的移动速度以及 敌人战机 的移动方向
+        sets.init_dynamic_sets()
+
         # 重置统计信息
         stats.game_active = True
         stats.reset_stats()
@@ -132,6 +135,9 @@ def check_bullet_enemy_collisions(sets, screen, fighter):
 
         create_enemy_fleet(sets, screen, fighter)
 
+        # 提升游戏的设置
+        sets.increase_speed()
+
 
 def list_collide(sets):
     """遍历所有的子弹，记录其中和敌机相撞的子弹与敌机"""
@@ -203,7 +209,7 @@ def get_number_enemy_x(sets, enemy_tool):
 
 def get_number_enemy_rows(sets, enemy_tool, fighter_tool):
     # 计算屏幕可容纳多少行敌人战机
-    available_space_y = sets.screen_height - 3 * enemy_tool.rect.height - fighter_tool.rect.height
+    available_space_y = sets.screen_height - 10 * enemy_tool.rect.height - fighter_tool.rect.height
     number_enemy_rows = int(available_space_y / (2 * enemy_tool.rect.height))
 
     return number_enemy_rows
