@@ -22,7 +22,7 @@ class Button():
         self.prepare_text()
 
     def prepare_text(self):
-        """将 msg 渲染成图像，绘制在矩形框上"""
+        """将文本渲染成图像，绘制在矩形框上"""
         self.text_img = self.font.render(self.sets.start_butn_text, True, self.text_color)
         self.text_img_rect = self.text_img.get_rect()
         self.text_img_rect.center = self.rect.center

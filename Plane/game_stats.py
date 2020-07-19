@@ -1,5 +1,5 @@
 class GameStats():
-    """跟踪游戏的统计信息"""
+    """跟踪每一局游戏的统计信息"""
     def __init__(self, sets):
         """初始化统计信息"""
         self.sets = sets

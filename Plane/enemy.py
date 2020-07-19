@@ -14,8 +14,8 @@ class Enemy():
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
 
-        # 敌机的飞行速度
-        self.speed_factor = self.sets.enemy_speed_factor
+        # 存储坐标的小数
+        self.float_x = float(self.rect.x)
 
     def blit_img(self):
         """在指定位置绘制敌机"""
@@ -23,7 +23,8 @@ class Enemy():
 
     def update_coordinate(self):
         """敌人战机向右或向左移动"""
-        self.rect.x += (self.speed_factor * self.sets.enemy_direction)
+        self.float_x += (self.sets.enemy_speed_factor * self.sets.enemy_direction)
+        self.rect.x = self.float_x
 
     def check_edges(self):
         """如果到达屏幕的最右边或者是最左边的边缘，则返回 True"""

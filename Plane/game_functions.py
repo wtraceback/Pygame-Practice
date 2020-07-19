@@ -44,12 +44,11 @@ def check_click_start_butn(sets, screen, stats, fighter, start_butn, pos):
     """点击了开始按钮后，将开始游戏"""
     butn_clicked = start_butn.rect.collidepoint(pos[0], pos[1])
     if butn_clicked and not stats.game_active:
-        # 隐藏光标
-        pygame.mouse.set_visible(False)
-
         # 重置统计信息
         stats.game_active = True
         stats.reset_stats()
+        # 隐藏光标
+        pygame.mouse.set_visible(False)
 
         # 清空 子弹列表
         for b in sets.bullet_list.copy():
@@ -215,6 +214,7 @@ def create_enemy(sets, screen, enemy_number, enemy_row):
 
     # 设置响应的敌人战机的位置
     x = new_enemy.rect.width + 2 * new_enemy.rect.width * enemy_number
+    new_enemy.float_x = x
     new_enemy.rect.x = x
     y = new_enemy.rect.height + 2 * new_enemy.rect.height * enemy_row
     new_enemy.rect.y = y

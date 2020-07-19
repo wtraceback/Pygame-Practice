@@ -15,19 +15,26 @@ class Ship():
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
 
-        self.speed_factor = self.sets.fighter_speed_factor
+        # 存储坐标的小数
+        self.float_center_x = float(self.rect.centerx)
+
         self.moving_left = False
         self.moving_right = False
 
     def blit_img(self):
+        """在指定位置绘制战斗机"""
         self.screen.blit(self.img, self.rect)
 
     def update_coordinate(self):
+        """更新战斗机的坐标，且限制其运动的边界"""
         if self.moving_left and self.rect.left > 0:
-            self.rect.centerx -= self.speed_factor
+            self.float_center_x -= self.sets.fighter_speed_factor
 
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.rect.centerx += self.speed_factor
+            self.float_center_x += self.sets.fighter_speed_factor
+
+        self.rect.centerx = self.float_center_x
 
     def center_fighter(self):
-        self.rect.centerx = self.screen_rect.centerx
+        """将战斗机的位置设置为居中"""
+        self.float_center_x = self.screen_rect.centerx
