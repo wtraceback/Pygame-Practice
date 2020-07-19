@@ -1,5 +1,6 @@
 import pygame
 
+
 class Enemy():
     """这是一个敌人战机的类"""
     def __init__(self, sets, screen):

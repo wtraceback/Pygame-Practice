@@ -37,8 +37,12 @@ class Settings():
         self.fighter_speed_factor = 5
         self.bullet_speed_factor = 3
         self.enemy_speed_factor = 1
+
         # 舰队移动的方向：右：+1 左：-1
         self.enemy_direction = 1
+
+        # 每个敌人战机的分数
+        self.enemy_points = 10
 
     def increase_speed(self):
         """提升 子弹、敌人战机、战斗机 的速度"""

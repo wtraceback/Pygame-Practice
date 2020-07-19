@@ -5,6 +5,7 @@ from ship import Ship
 import game_functions as gf
 from game_stats import GameStats
 from button import Button
+from scoreboard import Scoreboard
 
 
 def main():
@@ -18,6 +19,9 @@ def main():
 
     # 创建一个用于存储游戏统计信息的实例
     stats = GameStats(sets)
+
+    # 创建计分相关信息
+    score_board = Scoreboard(sets, screen, stats)
 
     # 创建开始按钮
     start_butn = Button(sets, screen)
@@ -38,13 +42,13 @@ def main():
             fighter.update_coordinate()
 
             # 更新子弹的坐标，并且进行子弹和敌人战机的碰撞检测
-            gf.update_bullets_coordinate(sets, screen, fighter)
+            gf.update_bullets_coordinate(sets, screen, stats, score_board, fighter)
 
             # 检测敌人战机是否到达屏幕边缘、更新敌人战机的坐标
             gf.update_enemy_fleet_coordinate(sets, screen, stats, fighter)
 
         # 绘制背景图、绘制子弹、绘制战斗机、绘制敌人舰队、重新绘制游戏窗口
-        gf.update_screen(sets, screen, stats, fighter, start_butn)
+        gf.update_screen(sets, screen, stats, score_board, fighter, start_butn)
 
 
 if __name__ == "__main__":

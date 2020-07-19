@@ -79,7 +79,7 @@ def check_click_start_butn(sets, screen, stats, fighter, start_butn, pos):
 #     return False
 
 
-def update_screen(sets, screen, stats, fighter, start_butn):
+def update_screen(sets, screen, stats, score_board, fighter, start_butn):
     # 绘制背景图
     blit_bg_image(sets, screen)
 
@@ -92,8 +92,12 @@ def update_screen(sets, screen, stats, fighter, start_butn):
     # 绘制敌人舰队
     blit_enemy_fleet_img(sets)
 
+    # 开始游戏前，显示开始按钮
     if not stats.game_active:
         start_butn.draw_butn()
+
+    # 显示得分
+    score_board.show_score()
 
     # 重新绘制游戏窗口
     pygame.display.update()
@@ -110,7 +114,7 @@ def fire_bullet(sets, screen, fighter):
         sets.bullet_list.append(new_bullet)
 
 
-def update_bullets_coordinate(sets, screen, fighter):
+def update_bullets_coordinate(sets, screen, stats, score_board, fighter):
     # 更新子弹的坐标
     for b in sets.bullet_list:
         b.update_coordinate()
@@ -121,12 +125,18 @@ def update_bullets_coordinate(sets, screen, fighter):
             sets.bullet_list.remove(b)
 
     # 响应子弹和敌人战机的碰撞 & 敌人战机全部被击落后，重新创建敌人战机舰队
-    check_bullet_enemy_collisions(sets, screen, fighter)
+    check_bullet_enemy_collisions(sets, screen, stats, score_board, fighter)
 
 
-def check_bullet_enemy_collisions(sets, screen, fighter):
+def check_bullet_enemy_collisions(sets, screen, stats, score_board, fighter):
     # 检测更新后的子弹是否集中敌人战机，如果有，就删除相应的子弹和敌人战机
     collitions = list_collide(sets)
+
+    # 将每次击中的敌人战机，记入得分中
+    if collitions:
+        for enemys in collitions.values():
+            stats.score += sets.enemy_points * len(enemys)
+            score_board.prepare_text()
 
     # 删除现有的子弹并重新创建敌人战机舰队
     if len(sets.enemy_list) == 0:
@@ -147,6 +157,8 @@ def list_collide(sets):
         if e:
             crashed[b] = e
             sets.bullet_list.remove(b)
+
+    return crashed
 
 
 def check_bullet_enemy_collide(b, sets):
