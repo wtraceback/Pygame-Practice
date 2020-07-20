@@ -12,3 +12,4 @@ class GameStats():
         """初始化在游戏运行期间可能变化的统计信息"""
         self.fighter_left = self.sets.fighter_max_num
         self.score = 0
+        self.level = 1

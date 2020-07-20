@@ -6,7 +6,7 @@ from bullet import Bullet
 from enemy import Enemy
 
 
-def check_events(sets, screen, stats, fighter, start_butn):
+def check_events(sets, screen, stats, score_board, fighter, start_butn):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -17,7 +17,7 @@ def check_events(sets, screen, stats, fighter, start_butn):
             check_keyup_events(event, fighter)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
-            check_click_start_butn(sets, screen, stats, fighter, start_butn, pos)
+            check_click_start_butn(sets, screen, stats, score_board, fighter, start_butn, pos)
 
 
 def check_keydown_events(event, sets, screen, fighter):
@@ -40,7 +40,7 @@ def  check_keyup_events(event, fighter):
         fighter.moving_right = False
 
 
-def check_click_start_butn(sets, screen, stats, fighter, start_butn, pos):
+def check_click_start_butn(sets, screen, stats, score_board, fighter, start_butn, pos):
     """点击了开始按钮后，将开始游戏"""
     butn_clicked = start_butn.rect.collidepoint(pos[0], pos[1])
     if butn_clicked and not stats.game_active:
@@ -52,6 +52,10 @@ def check_click_start_butn(sets, screen, stats, fighter, start_butn, pos):
         stats.reset_stats()
         # 隐藏光标
         pygame.mouse.set_visible(False)
+
+        # 重置得分和等级
+        score_board.prepare_score_text()
+        score_board.prepare_level_text()
 
         # 清空 子弹列表
         for b in sets.bullet_list.copy():
@@ -135,18 +139,22 @@ def check_bullet_enemy_collisions(sets, screen, stats, score_board, fighter):
     # 将每次击中的敌人战机，记入得分中
     if collitions:
         for enemys in collitions.values():
-            stats.score += sets.enemy_points * len(enemys)
-            score_board.prepare_text()
+            stats.score += sets.each_enemy_score * len(enemys)
+            score_board.prepare_score_text()
 
     # 删除现有的子弹并重新创建敌人战机舰队
     if len(sets.enemy_list) == 0:
         for b in sets.bullet_list.copy():
             sets.bullet_list.remove(b)
 
-        create_enemy_fleet(sets, screen, fighter)
-
         # 提升游戏的设置
         sets.increase_speed()
+
+        # 提升等级
+        stats.level += 1
+        score_board.prepare_level_text()
+
+        create_enemy_fleet(sets, screen, fighter)
 
 
 def list_collide(sets):

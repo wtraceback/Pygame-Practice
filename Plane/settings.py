@@ -30,7 +30,10 @@ class Settings():
         self.start_butn_text = 'Start'
 
         # 提升游戏的等级，加快游戏的节奏
-        self.spddeup_scale = 1.1
+        self.speedup_scale = 1.1
+        # 敌人战机的分数的提升倍数
+        self.score_scale = 1.5
+
         self.init_dynamic_sets()
 
     def init_dynamic_sets(self):
@@ -42,10 +45,12 @@ class Settings():
         self.enemy_direction = 1
 
         # 每个敌人战机的分数
-        self.enemy_points = 10
+        self.each_enemy_score = 10
 
     def increase_speed(self):
-        """提升 子弹、敌人战机、战斗机 的速度"""
-        self.fighter_speed_factor += self.spddeup_scale
-        self.bullet_speed_factor += self.spddeup_scale
-        self.enemy_speed_factor += self.spddeup_scale
+        """提升 子弹、敌人战机、战斗机 的速度以及敌人战机的分数"""
+        self.fighter_speed_factor *= self.speedup_scale
+        self.bullet_speed_factor *= self.speedup_scale
+        self.enemy_speed_factor *= self.speedup_scale
+
+        self.each_enemy_score = int(self.each_enemy_score * self.score_scale)

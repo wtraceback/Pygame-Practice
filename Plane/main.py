@@ -35,7 +35,7 @@ def main():
     # 开始游戏的主循环
     while True:
         # 监听键盘和鼠标事件
-        gf.check_events(sets, screen, stats, fighter, start_butn)
+        gf.check_events(sets, screen, stats, score_board, fighter, start_butn)
 
         if stats.game_active:
             #更新战斗机的坐标
