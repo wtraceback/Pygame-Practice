@@ -142,6 +142,8 @@ def check_bullet_enemy_collisions(sets, screen, stats, score_board, fighter):
             stats.score += sets.each_enemy_score * len(enemys)
             score_board.prepare_score_text()
 
+        check_high_score(stats, score_board)
+
     # 删除现有的子弹并重新创建敌人战机舰队
     if len(sets.enemy_list) == 0:
         for b in sets.bullet_list.copy():
@@ -242,7 +244,7 @@ def create_enemy(sets, screen, enemy_number, enemy_row):
     x = new_enemy.rect.width + 2 * new_enemy.rect.width * enemy_number
     new_enemy.float_x = x
     new_enemy.rect.x = x
-    y = new_enemy.rect.height + 2 * new_enemy.rect.height * enemy_row
+    y = 2 * new_enemy.rect.height + 2 * new_enemy.rect.height * enemy_row
     new_enemy.rect.y = y
 
     sets.enemy_list.append(new_enemy)
@@ -327,3 +329,10 @@ def check_enemy_arrive_bottom(sets, screen, stats, fighter):
 def blit_enemy_fleet_img(sets):
     for enemy in sets.enemy_list:
         enemy.blit_img()
+
+
+def check_high_score(stats, score_board):
+    """检测当前的分数是否超过最高分"""
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        score_board.prepare_high_score_text()

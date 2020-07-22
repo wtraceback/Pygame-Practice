@@ -15,18 +15,20 @@ class Scoreboard():
         self.font = pygame.font.SysFont(None, 32)
         self.text_color = (30, 30, 30)
 
+        self.prepare_high_score_text()
         self.prepare_score_text()
         self.prepare_level_text()
 
     def prepare_score_text(self):
         """将分数文本渲染成图像，绘制在右上角"""
-        score_text = str(self.stats.score)
+        rounded_score = int(round(self.stats.score, -1))
+        score_text = '{:,}'.format(rounded_score)
         self.score_img = self.font.render('Score: ' + score_text, True, self.text_color)
 
         # 显示得分的位置：右上角
         self.score_rect = self.score_img.get_rect()
         self.score_rect.right = self.screen_rect.right - 20
-        self.score_rect.top = 20
+        self.score_rect.top = self.high_score_rect.bottom + 10
 
     def prepare_level_text(self):
         """将等级文本渲染成图像，绘制在正上方"""
@@ -38,8 +40,21 @@ class Scoreboard():
         self.level_rect.centerx = self.screen_rect.centerx
         self.level_rect.top = 20
 
+    def prepare_high_score_text(self):
+        """将最高分文本渲染成图像，绘制在右上角"""
+        high_score = int(round(self.stats.high_score, -1))
+        high_score_text = '{:,}'.format(high_score)
+        self.high_score_img = self.font.render('High Score: ' + high_score_text, True, self.text_color)
+
+        # 显示得分的位置：右上角
+        self.high_score_rect = self.high_score_img.get_rect()
+        self.high_score_rect.right = self.screen_rect.right - 20
+        self.high_score_rect.top = 10
+
     def show_score(self):
         """在屏幕上右上角显示得分"""
         self.screen.blit(self.score_img, self.score_rect)
         # 在屏幕的正上方显示游戏等级
         self.screen.blit(self.level_img, self.level_rect)
+        # 在屏幕的右上角绘制最高分
+        self.screen.blit(self.high_score_img, self.high_score_rect)
