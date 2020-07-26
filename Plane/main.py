@@ -45,7 +45,7 @@ def main():
             gf.update_bullets_coordinate(sets, screen, stats, score_board, fighter)
 
             # 检测敌人战机是否到达屏幕边缘、更新敌人战机的坐标
-            gf.update_enemy_fleet_coordinate(sets, screen, stats, fighter)
+            gf.update_enemy_fleet_coordinate(sets, screen, stats, score_board, fighter)
 
         # 绘制背景图、绘制子弹、绘制战斗机、绘制敌人舰队、重新绘制游戏窗口
         gf.update_screen(sets, screen, stats, score_board, fighter, start_butn)

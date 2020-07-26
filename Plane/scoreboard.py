@@ -1,5 +1,7 @@
 import pygame.font
 
+from ship import Ship
+
 
 class Scoreboard():
     """显示得分信息相关的类"""
@@ -18,6 +20,7 @@ class Scoreboard():
         self.prepare_high_score_text()
         self.prepare_score_text()
         self.prepare_level_text()
+        self.prepare_fighters()
 
     def prepare_score_text(self):
         """将分数文本渲染成图像，绘制在右上角"""
@@ -38,7 +41,7 @@ class Scoreboard():
         # 显示等级的位置：正上方
         self.level_rect = self.level_img.get_rect()
         self.level_rect.centerx = self.screen_rect.centerx
-        self.level_rect.top = 20
+        self.level_rect.top = 10
 
     def prepare_high_score_text(self):
         """将最高分文本渲染成图像，绘制在右上角"""
@@ -51,6 +54,15 @@ class Scoreboard():
         self.high_score_rect.right = self.screen_rect.right - 20
         self.high_score_rect.top = 10
 
+    def prepare_fighters(self):
+        """显示剩余的战斗机"""
+        self.fighters = []
+        for fighter_num in range(self.stats.fighter_left):
+            fighter = Ship(self.sets, self.screen)
+            fighter.rect.x = 10 + fighter_num * fighter.rect.width
+            fighter.rect.y = 10
+            self.fighters.append(fighter)
+
     def show_score(self):
         """在屏幕上右上角显示得分"""
         self.screen.blit(self.score_img, self.score_rect)
@@ -58,3 +70,6 @@ class Scoreboard():
         self.screen.blit(self.level_img, self.level_rect)
         # 在屏幕的右上角绘制最高分
         self.screen.blit(self.high_score_img, self.high_score_rect)
+
+        for fighter in self.fighters:
+            fighter.blit_img()

@@ -9,7 +9,7 @@ class Ship():
         self.screen_rect = screen.get_rect()
         self.sets = sets
 
-        self.img = pygame.image.load('images/fighter.png')
+        self.img = pygame.image.load('images/fighter2.png')
 
         self.rect = self.img.get_rect()
         self.rect.centerx = self.screen_rect.centerx

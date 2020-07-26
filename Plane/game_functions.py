@@ -53,9 +53,10 @@ def check_click_start_butn(sets, screen, stats, score_board, fighter, start_butn
         # 隐藏光标
         pygame.mouse.set_visible(False)
 
-        # 重置得分和等级
+        # 重置得分和等级以及剩余战斗机的数目
         score_board.prepare_score_text()
         score_board.prepare_level_text()
+        score_board.prepare_fighters()
 
         # 清空 子弹列表
         for b in sets.bullet_list.copy():
@@ -104,7 +105,8 @@ def update_screen(sets, screen, stats, score_board, fighter, start_butn):
     score_board.show_score()
 
     # 重新绘制游戏窗口
-    pygame.display.update()
+    pygame.display.flip()
+    # pygame.display.update()
 
 
 def blit_bg_image(sets, screen):
@@ -244,13 +246,13 @@ def create_enemy(sets, screen, enemy_number, enemy_row):
     x = new_enemy.rect.width + 2 * new_enemy.rect.width * enemy_number
     new_enemy.float_x = x
     new_enemy.rect.x = x
-    y = 2 * new_enemy.rect.height + 2 * new_enemy.rect.height * enemy_row
+    y = 3 * new_enemy.rect.height + 2 * new_enemy.rect.height * enemy_row
     new_enemy.rect.y = y
 
     sets.enemy_list.append(new_enemy)
 
 
-def update_enemy_fleet_coordinate(sets, screen, stats, fighter):
+def update_enemy_fleet_coordinate(sets, screen, stats, score_board, fighter):
     """检测敌人战机是否碰到左右边界"""
     check_fleet_edges(sets)
 
@@ -260,7 +262,7 @@ def update_enemy_fleet_coordinate(sets, screen, stats, fighter):
 
     # 检测敌人战机和战斗机之间的碰撞
     if check_fighter_enemy_collide(sets, fighter):
-        fighter_hit(sets, screen, stats, fighter)
+        fighter_hit(sets, screen, stats, score_board, fighter)
 
     # 检测是否有敌人战机到达了屏幕底端
     check_enemy_arrive_bottom(sets, screen, stats, fighter)
@@ -290,11 +292,13 @@ def check_fighter_enemy_collide(sets, fighter):
     return None
 
 
-def fighter_hit(sets, screen, stats, fighter):
-    """响应被敌人战机撞到的飞船"""
+def fighter_hit(sets, screen, stats, score_board, fighter):
+    """响应被敌人战机撞到的战斗机"""
     if stats.fighter_left > 0:
         # 将 战斗机 减一
         stats.fighter_left -= 1
+        # 更新左上角的战斗机的显示数目
+        score_board.prepare_fighters()
 
         # 清空 子弹列表
         for b in sets.bullet_list.copy():
