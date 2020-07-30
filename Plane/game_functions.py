@@ -1,6 +1,7 @@
 import sys
 import pygame
 from time import sleep
+import json
 
 from bullet import Bullet
 from enemy import Enemy
@@ -10,9 +11,10 @@ def check_events(sets, screen, stats, score_board, fighter, start_butn):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            set_stored_high_score(stats)
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, sets, screen, fighter)
+            check_keydown_events(event, sets, screen, stats, fighter)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, fighter)
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -20,7 +22,7 @@ def check_events(sets, screen, stats, score_board, fighter, start_butn):
             check_click_start_butn(sets, screen, stats, score_board, fighter, start_butn, pos)
 
 
-def check_keydown_events(event, sets, screen, fighter):
+def check_keydown_events(event, sets, screen, stats, fighter):
     """响应按键"""
     if event.key == pygame.K_LEFT:
         fighter.moving_left = True
@@ -29,6 +31,7 @@ def check_keydown_events(event, sets, screen, fighter):
     elif event.key == pygame.K_SPACE:
         fire_bullet(sets, screen, fighter)
     elif event.key == pygame.K_q:
+        set_stored_high_score(stats)
         sys.exit()
 
 
@@ -265,7 +268,7 @@ def update_enemy_fleet_coordinate(sets, screen, stats, score_board, fighter):
         fighter_hit(sets, screen, stats, score_board, fighter)
 
     # 检测是否有敌人战机到达了屏幕底端
-    check_enemy_arrive_bottom(sets, screen, stats, fighter)
+    check_enemy_arrive_bottom(sets, screen, stats, score_board, fighter)
 
 
 def check_fleet_edges(sets):
@@ -298,6 +301,7 @@ def fighter_hit(sets, screen, stats, score_board, fighter):
         # 将 战斗机 减一
         stats.fighter_left -= 1
         # 更新左上角的战斗机的显示数目
+        # score_board.fighters.pop()
         score_board.prepare_fighters()
 
         # 清空 子弹列表
@@ -321,12 +325,12 @@ def fighter_hit(sets, screen, stats, score_board, fighter):
         pygame.mouse.set_visible(True)
 
 
-def check_enemy_arrive_bottom(sets, screen, stats, fighter):
+def check_enemy_arrive_bottom(sets, screen, stats, score_board, fighter):
     """检查是否有敌人战机到达了屏幕底端"""
     screen_rect = screen.get_rect()
     for e in sets.enemy_list:
         if e.rect.bottom >= screen_rect.bottom:
-            fighter_hit(sets, screen, stats, fighter)
+            fighter_hit(sets, screen, stats, score_board, fighter)
             break
 
 
@@ -340,3 +344,37 @@ def check_high_score(stats, score_board):
     if stats.score > stats.high_score:
         stats.high_score = stats.score
         score_board.prepare_high_score_text()
+
+
+def get_stored_high_score(stats):
+    """从 json 文件加载 历史最高分"""
+    try:
+        # Python 在当前执行的文件所在的目录中查找指定的文件
+        filename = 'history_high_score.json'
+        with open(filename) as file_obj:
+            data = json.load(file_obj)
+    except:
+        # 如果读取数据失败(文件不存在或格式错误)，则使用默认值
+        pass
+    else:
+        # 防止获取 history_high_score 属性失败
+        try:
+            # 如果为 0 或者是文件读取错误，则使用默认值
+            if data['history_high_score'] > 0:
+                stats.high_score = data['history_high_score']
+                stats.history_high_score = data['history_high_score']
+        except:
+            # 文件数据格式没有 history_high_score 属性
+            pass
+
+
+def set_stored_high_score(stats):
+    """当前分数超过历史最高分，则将最高分保存至 json 文件中"""
+    if stats.high_score > stats.history_high_score:
+        data = {
+            'history_high_score': int(round(stats.high_score, -1))
+        }
+
+        filename = 'history_high_score.json'
+        with open(filename, 'w') as file_obj:
+            json.dump(data, file_obj)

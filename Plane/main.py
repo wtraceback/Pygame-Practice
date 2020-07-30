@@ -20,6 +20,9 @@ def main():
     # 创建一个用于存储游戏统计信息的实例
     stats = GameStats(sets)
 
+    # 读取 json 文件中的历史最高分
+    gf.get_stored_high_score(stats)
+
     # 创建计分相关信息
     score_board = Scoreboard(sets, screen, stats)
 

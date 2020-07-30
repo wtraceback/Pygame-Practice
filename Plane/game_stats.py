@@ -11,6 +11,9 @@ class GameStats():
         # 最高分
         self.high_score = 0
 
+        # json 文件中的历史最高分
+        self.history_high_score = 0
+
     def reset_stats(self):
         """初始化在游戏运行期间可能变化的统计信息"""
         self.fighter_left = self.sets.fighter_max_num
