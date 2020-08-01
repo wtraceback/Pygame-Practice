@@ -149,19 +149,25 @@ def check_bullet_enemy_collisions(sets, screen, stats, score_board, fighter):
 
         check_high_score(stats, score_board)
 
-    # 删除现有的子弹并重新创建敌人战机舰队
+    # 重绘画面，提升等级
     if len(sets.enemy_list) == 0:
-        for b in sets.bullet_list.copy():
-            sets.bullet_list.remove(b)
+        start_new_level(sets, screen, stats, score_board, fighter)
 
-        # 提升游戏的设置
-        sets.increase_speed()
 
-        # 提升等级
-        stats.level += 1
-        score_board.prepare_level_text()
+def start_new_level(sets, screen, stats, score_board, fighter):
+    """重置画面，然后开始新的一个阶段"""
+    # 删除现有的子弹
+    for b in sets.bullet_list.copy():
+        sets.bullet_list.remove(b)
 
-        create_enemy_fleet(sets, screen, fighter)
+    # 提升游戏的设置
+    sets.increase_speed()
+
+    # 提升等级
+    stats.level += 1
+    score_board.prepare_level_text()
+
+    create_enemy_fleet(sets, screen, fighter)
 
 
 def list_collide(sets):
@@ -344,28 +350,6 @@ def check_high_score(stats, score_board):
     if stats.score > stats.high_score:
         stats.high_score = stats.score
         score_board.prepare_high_score_text()
-
-
-def get_stored_high_score(stats):
-    """从 json 文件加载 历史最高分"""
-    try:
-        # Python 在当前执行的文件所在的目录中查找指定的文件
-        filename = 'history_high_score.json'
-        with open(filename) as file_obj:
-            data = json.load(file_obj)
-    except:
-        # 如果读取数据失败(文件不存在或格式错误)，则使用默认值
-        pass
-    else:
-        # 防止获取 history_high_score 属性失败
-        try:
-            # 如果为 0 或者是文件读取错误，则使用默认值
-            if data['history_high_score'] > 0:
-                stats.high_score = data['history_high_score']
-                stats.history_high_score = data['history_high_score']
-        except:
-            # 文件数据格式没有 history_high_score 属性
-            pass
 
 
 def set_stored_high_score(stats):
