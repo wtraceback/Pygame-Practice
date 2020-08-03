@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from baffle import Baffle
 import game_functions as gf
+from ball import Ball
 
 
 def main():
@@ -16,16 +17,22 @@ def main():
     # 创建一个挡板
     baffle = Baffle(sets, screen)
 
+    # 创建一个弹球
+    ball = Ball(sets, screen, baffle)
+
     # 开始游戏主循环
     while True:
         # 监听键盘和鼠标事件
-        gf.check_events(baffle)
+        gf.check_events(sets, baffle)
 
         # 更新挡板的坐标
         baffle.update()
 
+        # 更新弹球的坐标
+        ball.update()
+
         # 更新画面
-        gf.update_screen(sets, screen, baffle)
+        gf.update_screen(sets, screen, baffle, ball)
 
 
 if __name__ == '__main__':
