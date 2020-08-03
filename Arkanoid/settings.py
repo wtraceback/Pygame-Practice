@@ -16,3 +16,6 @@ class Settings():
 
         # 标题
         self.caption = 'Arkanoid'
+
+        # 挡板的移动速度
+        self.baffle_speed_factor = 3
