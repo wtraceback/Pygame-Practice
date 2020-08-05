@@ -20,5 +20,5 @@ class Settings():
         # 挡板的移动速度
         self.baffle_speed_factor = 3
 
-        # 弹球相关的设置
-        self.not_fire = True
+        # 弹球的移动速度
+        self.ball_speed_factor = [1, -1]

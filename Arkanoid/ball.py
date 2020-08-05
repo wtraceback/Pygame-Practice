@@ -19,9 +19,18 @@ class Ball():
         self.rect.centerx = self.baffle.rect.centerx
         self.rect.bottom = self.baffle.rect.top
 
+        # 弹球的初始状态
+        self.is_fire = False
+
     def update(self):
-        if self.sets.not_fire:
+        if not self.is_fire:
+            # 弹球跟着挡板移动
             self.rect.centerx = self.baffle.rect.centerx
+        else:
+            # 弹球自行移动
+            self.rect = self.rect.move(self.sets.ball_speed_factor)
+            # self.rect.centerx = self.rect.centerx + self.sets.ball_speed_factor[0]
+            # self.rect.centery = self.rect.centery + self.sets.ball_speed_factor[1]
 
     def blit_img(self):
         """绘制弹球"""

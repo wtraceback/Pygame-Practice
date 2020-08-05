@@ -23,13 +23,13 @@ def main():
     # 开始游戏主循环
     while True:
         # 监听键盘和鼠标事件
-        gf.check_events(sets, baffle)
+        gf.check_events(baffle, ball)
 
         # 更新挡板的坐标
         baffle.update()
 
         # 更新弹球的坐标
-        ball.update()
+        gf.update_ball(sets, baffle, ball)
 
         # 更新画面
         gf.update_screen(sets, screen, baffle, ball)
