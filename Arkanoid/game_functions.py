@@ -33,7 +33,7 @@ def check_keyup_events(event, baffle):
         baffle.moving_left = False
 
 
-def update_screen(sets, screen, baffle, ball):
+def update_screen(sets, screen, baffle, ball, brick):
     """更新屏幕上的图像，并切换到新的屏幕"""
     blit_bg_img(sets, screen)
 
@@ -42,6 +42,9 @@ def update_screen(sets, screen, baffle, ball):
 
     # 绘制弹球
     ball.blit_img()
+
+    # 绘制砖块
+    brick.blit_img()
 
     # 重绘屏幕对象
     pygame.display.update()
