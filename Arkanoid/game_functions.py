@@ -1,6 +1,8 @@
 import pygame
 import sys
 
+from brick import Brick
+
 
 def check_events(baffle, ball):
     """响应按键和鼠标事件"""
@@ -33,7 +35,7 @@ def check_keyup_events(event, baffle):
         baffle.moving_left = False
 
 
-def update_screen(sets, screen, baffle, ball, brick):
+def update_screen(sets, screen, baffle, ball):
     """更新屏幕上的图像，并切换到新的屏幕"""
     blit_bg_img(sets, screen)
 
@@ -44,7 +46,8 @@ def update_screen(sets, screen, baffle, ball, brick):
     ball.blit_img()
 
     # 绘制砖块
-    brick.blit_img()
+    for brick in sets.brick_list:
+        brick.blit_img()
 
     # 重绘屏幕对象
     pygame.display.update()
@@ -92,3 +95,42 @@ def collided(b, e):
             return True
 
     return False
+
+
+def create_brick_group(sets, screen, baffle):
+    """创建砖块组"""
+    brick_tool = Brick(sets, screen)
+    number_brick_x = get_number_brick_x(sets, brick_tool)
+    number_brick_rows = get_number_brick_y(sets, brick_tool, baffle)
+
+    for brick_row in range(number_brick_rows):
+        for brick_x_num in range(number_brick_x):
+            create_brick(sets, screen, brick_x_num, brick_row)
+
+
+def get_number_brick_x(sets, brick_tool):
+    """每一行可容纳的砖块个数"""
+    available_space_x = sets.screen_width - 10 * brick_tool.rect.width
+    number_x = int(available_space_x / brick_tool.rect.width)
+
+    return number_x
+
+
+def get_number_brick_y(sets, brick_tool, baffle_tool):
+    """计算屏幕可容纳多少行砖块"""
+    available_space_y = sets.screen_height - 5 * brick_tool.rect.height - 10 * baffle_tool.rect.height
+    number_brick_rows = int(available_space_y / brick_tool.rect.height)
+
+    return number_brick_rows
+
+
+def create_brick(sets, screen, brick_x_num, brick_row):
+    # 创建砖块并设置初始位置
+    new_brick = Brick(sets, screen)
+
+    x = 5 * new_brick.rect.width + new_brick.rect.width * brick_x_num
+    new_brick.rect.x = x
+    y = 5 * new_brick.rect.height + new_brick.rect.height * brick_row
+    new_brick.rect.y = y
+
+    sets.brick_list.append(new_brick)

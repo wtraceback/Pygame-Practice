@@ -4,7 +4,6 @@ from settings import Settings
 from baffle import Baffle
 import game_functions as gf
 from ball import Ball
-from brick import Brick
 
 
 def main():
@@ -21,8 +20,8 @@ def main():
     # 创建一个弹球
     ball = Ball(sets, screen, baffle)
     
-    # 创建一个砖块
-    brick = Brick(sets, screen)
+    # 创建砖块组
+    gf.create_brick_group(sets, screen, baffle)
 
     # 开始游戏主循环
     while True:
@@ -36,7 +35,7 @@ def main():
         gf.update_ball(sets, baffle, ball)
 
         # 更新画面
-        gf.update_screen(sets, screen, baffle, ball, brick)
+        gf.update_screen(sets, screen, baffle, ball)
 
 
 if __name__ == '__main__':
