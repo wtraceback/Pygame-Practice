@@ -64,10 +64,9 @@ def update_ball(sets, baffle, ball):
 
     # 检测弹球碰到左右墙壁以及顶上的墙壁
     if ball.rect.left < 0 or ball.rect.right > sets.screen_width:
-        sets.ball_speed_factor[0] *= -1
-    # if ball.rect.top < 0 or ball.rect.bottom > sets.screen_height:
+        sets.ball_speed_factor[0] *= sets.reverse_direction
     if ball.rect.top < 0:
-        sets.ball_speed_factor[1] *= -1
+        sets.ball_speed_factor[1] *= sets.reverse_direction
 
     #  检测弹球触碰到屏幕底部
     if ball.rect.bottom > sets.screen_height:
@@ -75,7 +74,7 @@ def update_ball(sets, baffle, ball):
 
     # 检测弹球的碰撞
     if collided(ball, baffle):
-        sets.ball_speed_factor[1] *= -1
+        sets.ball_speed_factor[1] *= sets.reverse_direction
 
 
 def collided(b, e):
@@ -97,15 +96,30 @@ def collided(b, e):
     return False
 
 
-def create_brick_group(sets, screen, baffle):
+def create_brick_group(sets, screen):
     """创建砖块组"""
-    brick_tool = Brick(sets, screen)
-    number_brick_x = get_number_brick_x(sets, brick_tool)
-    number_brick_rows = get_number_brick_y(sets, brick_tool, baffle)
+    brick_level_group = {
+        'level_1': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        'level_2': [10, 8, 6, 4, 2, 4, 6, 8, 10],
+        'level_3': [2, 4, 6, 8, 10, 8, 6, 4, 2],
+    }
 
-    for brick_row in range(number_brick_rows):
-        for brick_x_num in range(number_brick_x):
+    brick_level = brick_level_group['level_1']
+    brick_rows =len(brick_level)
+    for brick_row in range(brick_rows):
+        for brick_x_num in range(brick_level[brick_row]):
             create_brick(sets, screen, brick_x_num, brick_row)
+
+
+# def create_brick_group(sets, screen, baffle):
+#     """创建砖块组"""
+#     brick_tool = Brick(sets, screen)
+#     number_brick_x = get_number_brick_x(sets, brick_tool)
+#     number_brick_rows = get_number_brick_y(sets, brick_tool, baffle)
+# 
+#     for brick_row in range(number_brick_rows):
+#         for brick_x_num in range(number_brick_x):
+#             create_brick(sets, screen, brick_x_num, brick_row)
 
 
 def get_number_brick_x(sets, brick_tool):

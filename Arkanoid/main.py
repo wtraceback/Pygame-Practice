@@ -21,7 +21,7 @@ def main():
     ball = Ball(sets, screen, baffle)
     
     # 创建砖块组
-    gf.create_brick_group(sets, screen, baffle)
+    gf.create_brick_group(sets, screen)
 
     # 开始游戏主循环
     while True:

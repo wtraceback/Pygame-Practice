@@ -22,6 +22,7 @@ class Settings():
 
         # 弹球的移动速度
         self.ball_speed_factor = [1, -1]
+        self.reverse_direction = -1
 
         # 砖块组
         self.brick_list = []
