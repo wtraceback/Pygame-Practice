@@ -72,9 +72,27 @@ def update_ball(sets, baffle, ball):
     if ball.rect.bottom > sets.screen_height:
         pass
 
-    # 检测弹球的碰撞
+    # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
         sets.ball_speed_factor[1] *= sets.reverse_direction
+
+    # 检测弹球与砖块的碰撞
+    collisions = check_ball_brick_collide(sets, ball)
+    if collisions:
+        sets.ball_speed_factor[1] *= sets.reverse_direction
+        pass
+
+
+def check_ball_brick_collide(sets, ball):
+    """判断弹球是否与砖块相撞"""
+    crashed = []
+
+    for brick in sets.brick_list:
+        if collided(ball, brick):
+            crashed.append(brick)
+            sets.brick_list.remove(brick)
+
+    return crashed
 
 
 def collided(b, e):

@@ -18,10 +18,10 @@ class Settings():
         self.caption = 'Arkanoid'
 
         # 挡板的移动速度
-        self.baffle_speed_factor = 3
+        self.baffle_speed_factor = 5
 
         # 弹球的移动速度
-        self.ball_speed_factor = [1, -1]
+        self.ball_speed_factor = [2, -2]
         self.reverse_direction = -1
 
         # 砖块组
