@@ -5,6 +5,7 @@ from baffle import Baffle
 import game_functions as gf
 from ball import Ball
 from game_stats import GameStats
+from button import Button
 
 
 def main():
@@ -17,6 +18,9 @@ def main():
 
     # 创建一个用于存储游戏统计信息的实例
     stats = GameStats(sets)
+
+    # 创建 Retry 按钮
+    retry_butn = Button(sets, screen)
 
     # 创建一个挡板
     baffle = Baffle(sets, screen)
@@ -32,14 +36,15 @@ def main():
         # 监听键盘和鼠标事件
         gf.check_events(baffle, ball)
 
-        # 更新挡板的坐标
-        baffle.update()
+        if stats.game_active:
+            # 更新挡板的坐标
+            baffle.update()
 
-        # 更新弹球的坐标
-        gf.update_ball(sets, stats, screen, baffle, ball)
+            # 更新弹球的坐标
+            gf.update_ball(sets, stats, screen, baffle, ball)
 
         # 更新画面
-        gf.update_screen(sets, screen, baffle, ball)
+        gf.update_screen(sets, stats, screen, baffle, ball, retry_butn)
 
 
 if __name__ == '__main__':

@@ -36,19 +36,23 @@ def check_keyup_events(event, baffle):
         baffle.moving_left = False
 
 
-def update_screen(sets, screen, baffle, ball):
+def update_screen(sets, stats, screen, baffle, ball, retry_butn):
     """更新屏幕上的图像，并切换到新的屏幕"""
     blit_bg_img(sets, screen)
 
-    # 绘制挡板
-    baffle.blit_img()
+    if stats.game_active:
+        # 绘制挡板
+        baffle.blit_img()
 
-    # 绘制弹球
-    ball.blit_img()
+        # 绘制弹球
+        ball.blit_img()
 
-    # 绘制砖块
-    for brick in sets.brick_list:
-        brick.blit_img()
+        # 绘制砖块
+        for brick in sets.brick_list:
+            brick.blit_img()
+    else:
+        # 绘制重玩点击按钮
+        retry_butn.draw_butn()
 
     # 重绘屏幕对象
     pygame.display.update()
@@ -70,7 +74,8 @@ def update_ball(sets, stats, screen, baffle, ball):
         sets.ball_speed_factor[1] *= sets.reverse_direction
 
     # 弹球出界后，重置游戏
-    ball_out_of_game(sets, stats, screen, baffle, ball)
+    if ball.rect.bottom > sets.screen_height:
+        ball_out_of_game(sets, stats, screen, baffle, ball)
 
     # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
@@ -84,23 +89,22 @@ def update_ball(sets, stats, screen, baffle, ball):
 
     if len(sets.brick_list) == 0:
         # 初始化砖块和挡板的位置
-        # 创建新的砖块组
+        # 创建新的砖块组（升级）
         pass
 
 
 def ball_out_of_game(sets, stats, screen, baffle, ball):
     """弹球出界后，重置游戏"""
-    #  检测弹球触碰到屏幕底部
-    if ball.rect.bottom > sets.screen_height:
+    if stats.life_left > 0:
         # 游戏可用的生命数减一
         stats.life_left -= 1
 
         # 清空砖块列表
-        for brick in sets.brick_list.copy():
-            sets.brick_list.remove(brick)
+        # for brick in sets.brick_list.copy():
+        #     sets.brick_list.remove(brick)
 
         # 创建新的砖块组
-        create_brick_group(sets, screen)
+        # create_brick_group(sets, screen)
 
         # 初始化挡板和弹球的位置
         baffle.center_baffle()
@@ -108,6 +112,9 @@ def ball_out_of_game(sets, stats, screen, baffle, ball):
 
         # 暂停 0.5 秒
         sleep(0.5)
+    else:
+        # 点击按钮后才能重新开始
+        stats.game_active = False
 
 
 def check_ball_brick_collide(sets, ball):

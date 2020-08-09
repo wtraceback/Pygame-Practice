@@ -27,3 +27,6 @@ class Settings():
 
         # 砖块组
         self.brick_list = []
+
+        # retry 按钮信息
+        self.retry_text = 'Retry'
