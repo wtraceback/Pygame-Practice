@@ -19,6 +19,7 @@ class Settings():
 
         # 挡板的移动速度
         self.baffle_speed_factor = 5
+        self.life_limit = 3
 
         # 弹球的移动速度
         self.ball_speed_factor = [2, -2]

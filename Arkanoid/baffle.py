@@ -33,3 +33,7 @@ class Baffle():
     def blit_img(self):
         """绘制挡板"""
         self.screen.blit(self.img, self.rect)
+
+    def center_baffle(self):
+        """初始化挡板的位置居中"""
+        self.rect.centerx = self.screen_rect.centerx

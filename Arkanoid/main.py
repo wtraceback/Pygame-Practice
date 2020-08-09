@@ -4,6 +4,7 @@ from settings import Settings
 from baffle import Baffle
 import game_functions as gf
 from ball import Ball
+from game_stats import GameStats
 
 
 def main():
@@ -13,6 +14,9 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(sets.size)
     pygame.display.set_caption(sets.caption)
+
+    # 创建一个用于存储游戏统计信息的实例
+    stats = GameStats(sets)
 
     # 创建一个挡板
     baffle = Baffle(sets, screen)
@@ -32,7 +36,7 @@ def main():
         baffle.update()
 
         # 更新弹球的坐标
-        gf.update_ball(sets, baffle, ball)
+        gf.update_ball(sets, stats, screen, baffle, ball)
 
         # 更新画面
         gf.update_screen(sets, screen, baffle, ball)

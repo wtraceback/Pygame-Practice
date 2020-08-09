@@ -1,5 +1,6 @@
 import pygame
 import sys
+from time import sleep
 
 from brick import Brick
 
@@ -58,7 +59,7 @@ def blit_bg_img(sets, screen):
     screen.blit(sets.bg_img, sets.bg_img_rect)
 
 
-def update_ball(sets, baffle, ball):
+def update_ball(sets, stats, screen, baffle, ball):
     # 更新弹球的坐标
     ball.update()
 
@@ -68,9 +69,8 @@ def update_ball(sets, baffle, ball):
     if ball.rect.top < 0:
         sets.ball_speed_factor[1] *= sets.reverse_direction
 
-    #  检测弹球触碰到屏幕底部
-    if ball.rect.bottom > sets.screen_height:
-        pass
+    # 弹球出界后，重置游戏
+    ball_out_of_game(sets, stats, screen, baffle, ball)
 
     # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
@@ -82,12 +82,39 @@ def update_ball(sets, baffle, ball):
         sets.ball_speed_factor[1] *= sets.reverse_direction
         pass
 
+    if len(sets.brick_list) == 0:
+        # 初始化砖块和挡板的位置
+        # 创建新的砖块组
+        pass
+
+
+def ball_out_of_game(sets, stats, screen, baffle, ball):
+    """弹球出界后，重置游戏"""
+    #  检测弹球触碰到屏幕底部
+    if ball.rect.bottom > sets.screen_height:
+        # 游戏可用的生命数减一
+        stats.life_left -= 1
+
+        # 清空砖块列表
+        for brick in sets.brick_list.copy():
+            sets.brick_list.remove(brick)
+
+        # 创建新的砖块组
+        create_brick_group(sets, screen)
+
+        # 初始化挡板和弹球的位置
+        baffle.center_baffle()
+        ball.reset_ball()
+
+        # 暂停 0.5 秒
+        sleep(0.5)
+
 
 def check_ball_brick_collide(sets, ball):
     """判断弹球是否与砖块相撞"""
     crashed = []
 
-    for brick in sets.brick_list:
+    for brick in sets.brick_list.copy():
         if collided(ball, brick):
             crashed.append(brick)
             sets.brick_list.remove(brick)
