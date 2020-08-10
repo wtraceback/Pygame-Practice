@@ -6,6 +6,7 @@ import game_functions as gf
 from ball import Ball
 from game_stats import GameStats
 from button import Button
+from levelboard import Levelboard
 
 
 def main():
@@ -18,6 +19,9 @@ def main():
 
     # 创建一个用于存储游戏统计信息的实例
     stats = GameStats(sets)
+
+    # 创建关卡相关信息
+    level_board = Levelboard(sets, stats, screen)
 
     # 创建 Retry 按钮
     retry_butn = Button(sets, screen)
@@ -44,7 +48,7 @@ def main():
             gf.update_ball(sets, stats, screen, baffle, ball)
 
         # 更新画面
-        gf.update_screen(sets, stats, screen, baffle, ball, retry_butn)
+        gf.update_screen(sets, stats, screen, baffle, ball, retry_butn, level_board)
 
 
 if __name__ == '__main__':

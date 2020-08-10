@@ -62,7 +62,7 @@ def check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, mouse_
         stats.game_active = True
 
 
-def update_screen(sets, stats, screen, baffle, ball, retry_butn):
+def update_screen(sets, stats, screen, baffle, ball, retry_butn, level_board):
     """更新屏幕上的图像，并切换到新的屏幕"""
     blit_bg_img(sets, screen)
 
@@ -76,6 +76,9 @@ def update_screen(sets, stats, screen, baffle, ball, retry_butn):
         # 绘制砖块
         for brick in sets.brick_list:
             brick.blit_img()
+
+        # 显示关卡
+        level_board.show_level()
     else:
         # 绘制重玩点击按钮
         retry_butn.draw_butn()
@@ -100,7 +103,7 @@ def update_ball(sets, stats, screen, baffle, ball):
         sets.ball_speed_factor[1] *= sets.reverse_direction
 
     # 弹球出界后，重置游戏
-    if ball.rect.bottom > sets.screen_height:
+    if ball.rect.top > sets.screen_height:
         ball_out_of_game(sets, stats, screen, baffle, ball)
 
     # 检测弹球与挡板的碰撞
