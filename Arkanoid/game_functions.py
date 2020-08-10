@@ -58,8 +58,9 @@ def check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, level_
         stats.reset_stats()
         stats.game_active = True
 
-        # 重置关卡信息
+        # 重置关卡信息、生命数
         level_board.prepare_level_text()
+        level_board.prepare_lifes()
 
         # 创建新的敌人战机舰队
         create_brick_group(sets, stats, screen)
@@ -107,7 +108,7 @@ def update_ball(sets, stats, screen, baffle, ball, level_board):
 
     # 弹球出界后，重置游戏
     if ball.rect.top > sets.screen_height:
-        ball_out_of_game(sets, stats, screen, baffle, ball)
+        ball_out_of_game(sets, stats, screen, baffle, ball, level_board)
 
     # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
@@ -139,11 +140,12 @@ def start_new_level(sets, stats, screen, baffle, ball, level_board):
     create_brick_group(sets, stats, screen)
 
 
-def ball_out_of_game(sets, stats, screen, baffle, ball):
+def ball_out_of_game(sets, stats, screen, baffle, ball, level_board):
     """弹球出界后，重置游戏"""
     if stats.life_left > 0:
         # 游戏可用的生命数减一
         stats.life_left -= 1
+        level_board.prepare_lifes()
 
         # 初始化挡板和弹球的位置
         baffle.center_baffle()
