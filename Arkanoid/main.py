@@ -34,7 +34,7 @@ def main():
     # 开始游戏主循环
     while True:
         # 监听键盘和鼠标事件
-        gf.check_events(baffle, ball)
+        gf.check_events(sets, stats, screen, baffle, ball, retry_butn)
 
         if stats.game_active:
             # 更新挡板的坐标

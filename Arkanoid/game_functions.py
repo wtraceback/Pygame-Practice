@@ -5,7 +5,7 @@ from time import sleep
 from brick import Brick
 
 
-def check_events(baffle, ball):
+def check_events(sets, stats, screen, baffle, ball, retry_butn):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -14,6 +14,9 @@ def check_events(baffle, ball):
             check_keydown_events(event, baffle, ball)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, baffle)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, mouse_x, mouse_y)
 
 
 def check_keydown_events(event, baffle, ball):
@@ -34,6 +37,29 @@ def check_keyup_events(event, baffle):
         baffle.moving_right = False
     elif event.key == pygame.K_LEFT:
         baffle.moving_left = False
+
+
+def check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, mouse_x, mouse_y):
+    """点击了 retry 按钮，则重新开始游戏"""
+    butn_clicked = retry_butn.rect.collidepoint(mouse_x, mouse_y)
+    if butn_clicked and not stats.game_active:
+        # 隐藏光标
+        pygame.mouse.set_visible(False)
+
+        # 清空原有的砖块
+        for brick in sets.brick_list.copy():
+            sets.brick_list.remove(brick)
+
+        # 创建新的敌人战机舰队
+        create_brick_group(sets, screen)
+
+        # 初始化挡板和弹球的位置
+        baffle.center_baffle()
+        ball.reset_ball()
+
+        # 重置统计信息(必须放在最后面；由于上次结束时，小球依然在屏幕外，因此 game_active 放在最前面的话，会立即执行生命数减一操作)
+        stats.reset_stats()
+        stats.game_active = True
 
 
 def update_screen(sets, stats, screen, baffle, ball, retry_butn):
@@ -99,13 +125,6 @@ def ball_out_of_game(sets, stats, screen, baffle, ball):
         # 游戏可用的生命数减一
         stats.life_left -= 1
 
-        # 清空砖块列表
-        # for brick in sets.brick_list.copy():
-        #     sets.brick_list.remove(brick)
-
-        # 创建新的砖块组
-        # create_brick_group(sets, screen)
-
         # 初始化挡板和弹球的位置
         baffle.center_baffle()
         ball.reset_ball()
@@ -113,8 +132,9 @@ def ball_out_of_game(sets, stats, screen, baffle, ball):
         # 暂停 0.5 秒
         sleep(0.5)
     else:
-        # 点击按钮后才能重新开始
+        # 显示 retry 按钮且显示光标
         stats.game_active = False
+        pygame.mouse.set_visible(True)
 
 
 def check_ball_brick_collide(sets, ball):
