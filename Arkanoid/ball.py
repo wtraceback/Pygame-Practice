@@ -24,8 +24,6 @@ class Ball():
         else:
             # 弹球自行移动
             self.rect = self.rect.move(self.sets.ball_speed_factor)
-            # self.rect.centerx = self.rect.centerx + self.sets.ball_speed_factor[0]
-            # self.rect.centery = self.rect.centery + self.sets.ball_speed_factor[1]
 
     def blit_img(self):
         """绘制弹球"""

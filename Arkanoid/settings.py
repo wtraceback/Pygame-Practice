@@ -21,8 +21,7 @@ class Settings():
         self.baffle_speed_factor = 5
         self.life_limit = 3
 
-        # 弹球的移动速度
-        self.ball_speed_factor = [2, -2]
+        # 弹球方向的取反
         self.reverse_direction = -1
 
         # 砖块组 and 砖块关卡
@@ -35,3 +34,9 @@ class Settings():
 
         # retry 按钮信息
         self.retry_text = 'Retry'
+
+        self.init_dynamic_sets()
+
+    def init_dynamic_sets(self):
+        # 弹球的移动速度
+        self.ball_speed_factor = [2, -2]

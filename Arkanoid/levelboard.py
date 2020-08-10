@@ -32,7 +32,7 @@ class Levelboard():
         """显示剩余的生命数"""
         self.lifes = []
         for star_num in range(self.stats.life_left):
-            life = LifeStar(self.sets, self.screen)
+            life = LifeStar(self.screen)
             life.rect.x = 10 + star_num * life.rect.width
             life.rect.y = 10
             self.lifes.append(life)

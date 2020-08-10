@@ -43,6 +43,9 @@ def check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, level_
     """点击了 retry 按钮，则重新开始游戏"""
     butn_clicked = retry_butn.rect.collidepoint(mouse_x, mouse_y)
     if butn_clicked and not stats.game_active:
+        # 恢复弹球最开始的移动方向
+        sets.init_dynamic_sets()
+
         # 隐藏光标
         pygame.mouse.set_visible(False)
 
@@ -108,7 +111,7 @@ def update_ball(sets, stats, screen, baffle, ball, level_board):
 
     # 弹球出界后，重置游戏
     if ball.rect.top > sets.screen_height:
-        ball_out_of_game(sets, stats, screen, baffle, ball, level_board)
+        ball_out_of_game(stats, baffle, ball, level_board)
 
     # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
@@ -118,10 +121,8 @@ def update_ball(sets, stats, screen, baffle, ball, level_board):
     collisions = check_ball_brick_collide(sets, ball)
     if collisions:
         sets.ball_speed_factor[1] *= sets.reverse_direction
-        pass
 
     if len(sets.brick_list) == 0:
-
         # 创建新的砖块组（升级）
         start_new_level(sets, stats, screen, baffle, ball, level_board)
 
@@ -140,7 +141,7 @@ def start_new_level(sets, stats, screen, baffle, ball, level_board):
     create_brick_group(sets, stats, screen)
 
 
-def ball_out_of_game(sets, stats, screen, baffle, ball, level_board):
+def ball_out_of_game(stats, baffle, ball, level_board):
     """弹球出界后，重置游戏"""
     if stats.life_left > 0:
         # 游戏可用的生命数减一
@@ -200,33 +201,6 @@ def create_brick_group(sets, stats, screen):
     for brick_row in range(brick_rows):
         for brick_x_num in range(brick_level[brick_row]):
             create_brick(sets, screen, brick_x_num, brick_row)
-
-
-# def create_brick_group(sets, screen, baffle):
-#     """创建砖块组"""
-#     brick_tool = Brick(sets, screen)
-#     number_brick_x = get_number_brick_x(sets, brick_tool)
-#     number_brick_rows = get_number_brick_y(sets, brick_tool, baffle)
-# 
-#     for brick_row in range(number_brick_rows):
-#         for brick_x_num in range(number_brick_x):
-#             create_brick(sets, screen, brick_x_num, brick_row)
-
-
-def get_number_brick_x(sets, brick_tool):
-    """每一行可容纳的砖块个数"""
-    available_space_x = sets.screen_width - 10 * brick_tool.rect.width
-    number_x = int(available_space_x / brick_tool.rect.width)
-
-    return number_x
-
-
-def get_number_brick_y(sets, brick_tool, baffle_tool):
-    """计算屏幕可容纳多少行砖块"""
-    available_space_y = sets.screen_height - 5 * brick_tool.rect.height - 10 * baffle_tool.rect.height
-    number_brick_rows = int(available_space_y / brick_tool.rect.height)
-
-    return number_brick_rows
 
 
 def create_brick(sets, screen, brick_x_num, brick_row):
