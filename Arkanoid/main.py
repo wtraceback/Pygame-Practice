@@ -33,19 +33,19 @@ def main():
     ball = Ball(sets, screen, baffle)
     
     # 创建砖块组
-    gf.create_brick_group(sets, screen)
+    gf.create_brick_group(sets, stats, screen)
 
     # 开始游戏主循环
     while True:
         # 监听键盘和鼠标事件
-        gf.check_events(sets, stats, screen, baffle, ball, retry_butn)
+        gf.check_events(sets, stats, screen, baffle, ball, retry_butn, level_board)
 
         if stats.game_active:
             # 更新挡板的坐标
             baffle.update()
 
             # 更新弹球的坐标
-            gf.update_ball(sets, stats, screen, baffle, ball)
+            gf.update_ball(sets, stats, screen, baffle, ball, level_board)
 
         # 更新画面
         gf.update_screen(sets, stats, screen, baffle, ball, retry_butn, level_board)

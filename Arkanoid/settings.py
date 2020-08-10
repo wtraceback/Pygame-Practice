@@ -25,8 +25,13 @@ class Settings():
         self.ball_speed_factor = [2, -2]
         self.reverse_direction = -1
 
-        # 砖块组
+        # 砖块组 and 砖块关卡
         self.brick_list = []
+        self.brick_level_group = {
+            'level_1': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            'level_2': [10, 8, 6, 4, 2, 4, 6, 8, 10],
+            'level_3': [2, 4, 6, 8, 10, 8, 6, 4, 2],
+        }
 
         # retry 按钮信息
         self.retry_text = 'Retry'

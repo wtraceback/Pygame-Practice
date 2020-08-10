@@ -5,7 +5,7 @@ from time import sleep
 from brick import Brick
 
 
-def check_events(sets, stats, screen, baffle, ball, retry_butn):
+def check_events(sets, stats, screen, baffle, ball, retry_butn, level_board):
     """响应按键和鼠标事件"""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -16,7 +16,7 @@ def check_events(sets, stats, screen, baffle, ball, retry_butn):
             check_keyup_events(event, baffle)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, mouse_x, mouse_y)
+            check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, level_board, mouse_x, mouse_y)
 
 
 def check_keydown_events(event, baffle, ball):
@@ -39,7 +39,7 @@ def check_keyup_events(event, baffle):
         baffle.moving_left = False
 
 
-def check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, mouse_x, mouse_y):
+def check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, level_board, mouse_x, mouse_y):
     """点击了 retry 按钮，则重新开始游戏"""
     butn_clicked = retry_butn.rect.collidepoint(mouse_x, mouse_y)
     if butn_clicked and not stats.game_active:
@@ -50,16 +50,19 @@ def check_click_retry_butn(sets, stats, screen, baffle, ball, retry_butn, mouse_
         for brick in sets.brick_list.copy():
             sets.brick_list.remove(brick)
 
-        # 创建新的敌人战机舰队
-        create_brick_group(sets, screen)
-
         # 初始化挡板和弹球的位置
         baffle.center_baffle()
         ball.reset_ball()
 
-        # 重置统计信息(必须放在最后面；由于上次结束时，小球依然在屏幕外，因此 game_active 放在最前面的话，会立即执行生命数减一操作)
+        # 重置统计信息(必须放在后面；由于上次结束时，小球依然在屏幕外，因此 game_active 放在最前面的话，会立即执行生命数减一操作)
         stats.reset_stats()
         stats.game_active = True
+
+        # 重置关卡信息
+        level_board.prepare_level_text()
+
+        # 创建新的敌人战机舰队
+        create_brick_group(sets, stats, screen)
 
 
 def update_screen(sets, stats, screen, baffle, ball, retry_butn, level_board):
@@ -92,7 +95,7 @@ def blit_bg_img(sets, screen):
     screen.blit(sets.bg_img, sets.bg_img_rect)
 
 
-def update_ball(sets, stats, screen, baffle, ball):
+def update_ball(sets, stats, screen, baffle, ball, level_board):
     # 更新弹球的坐标
     ball.update()
 
@@ -117,9 +120,23 @@ def update_ball(sets, stats, screen, baffle, ball):
         pass
 
     if len(sets.brick_list) == 0:
-        # 初始化砖块和挡板的位置
+
         # 创建新的砖块组（升级）
-        pass
+        start_new_level(sets, stats, screen, baffle, ball, level_board)
+
+
+def start_new_level(sets, stats, screen, baffle, ball, level_board):
+    """提升关卡"""
+    # 初始化挡板和弹球的位置
+    baffle.center_baffle()
+    ball.reset_ball()
+
+    # 提升等级
+    stats.level += 1
+    level_board.prepare_level_text()
+
+    # 创建新的砖块组
+    create_brick_group(sets, stats, screen)
 
 
 def ball_out_of_game(sets, stats, screen, baffle, ball):
@@ -171,15 +188,12 @@ def collided(b, e):
     return False
 
 
-def create_brick_group(sets, screen):
+def create_brick_group(sets, stats, screen):
     """创建砖块组"""
-    brick_level_group = {
-        'level_1': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        'level_2': [10, 8, 6, 4, 2, 4, 6, 8, 10],
-        'level_3': [2, 4, 6, 8, 10, 8, 6, 4, 2],
-    }
+    level = stats.level % (len(sets.brick_level_group) + 1)
+    level = level if level != 0 else 1
 
-    brick_level = brick_level_group['level_1']
+    brick_level = sets.brick_level_group['level_' + str(level)]
     brick_rows =len(brick_level)
     for brick_row in range(brick_rows):
         for brick_x_num in range(brick_level[brick_row]):
