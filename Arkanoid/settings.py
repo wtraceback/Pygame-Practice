@@ -37,6 +37,12 @@ class Settings():
 
         self.init_dynamic_sets()
 
+        # 音效相关
+        self.bg_music_name = 'music/bg_music.mp3'
+        self.baffle_music_name = 'music/collid_baffle.wav'
+        self.brick_music_name = 'music/collid_brick.wav'
+        self.game_over = 'music/game_over.wav'
+
     def init_dynamic_sets(self):
         # 弹球的移动速度
         self.ball_speed_factor = [2, -2]

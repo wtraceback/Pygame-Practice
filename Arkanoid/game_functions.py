@@ -99,7 +99,7 @@ def blit_bg_img(sets, screen):
     screen.blit(sets.bg_img, sets.bg_img_rect)
 
 
-def update_ball(sets, stats, screen, baffle, ball, level_board):
+def update_ball(sets, stats, screen, baffle, ball, level_board, music):
     # 更新弹球的坐标
     ball.update()
 
@@ -111,16 +111,18 @@ def update_ball(sets, stats, screen, baffle, ball, level_board):
 
     # 弹球出界后，重置游戏
     if ball.rect.top > sets.screen_height:
-        ball_out_of_game(stats, baffle, ball, level_board)
+        ball_out_of_game(stats, baffle, ball, level_board, music)
 
     # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
         sets.ball_speed_factor[1] *= sets.reverse_direction
+        music.collid_baffle.play()
 
     # 检测弹球与砖块的碰撞
     collisions = check_ball_brick_collide(sets, ball)
     if collisions:
         sets.ball_speed_factor[1] *= sets.reverse_direction
+        music.collid_brick.play()
 
     if len(sets.brick_list) == 0:
         # 创建新的砖块组（升级）
@@ -141,7 +143,7 @@ def start_new_level(sets, stats, screen, baffle, ball, level_board):
     create_brick_group(sets, stats, screen)
 
 
-def ball_out_of_game(stats, baffle, ball, level_board):
+def ball_out_of_game(stats, baffle, ball, level_board, music):
     """弹球出界后，重置游戏"""
     if stats.life_left > 0:
         # 游戏可用的生命数减一
@@ -157,6 +159,9 @@ def ball_out_of_game(stats, baffle, ball, level_board):
     else:
         # 显示 retry 按钮且显示光标
         stats.game_active = False
+        # game_over 音效
+        music.game_over.play()
+        sleep(1)
         pygame.mouse.set_visible(True)
 
 

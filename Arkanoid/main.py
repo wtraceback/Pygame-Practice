@@ -7,6 +7,7 @@ from ball import Ball
 from game_stats import GameStats
 from button import Button
 from levelboard import Levelboard
+from sound_effect import SoundEffect
 
 
 def main():
@@ -16,6 +17,9 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(sets.size)
     pygame.display.set_caption(sets.caption)
+
+    # 创建音效相关
+    music = SoundEffect(sets)
 
     # 创建一个用于存储游戏统计信息的实例
     stats = GameStats(sets)
@@ -45,7 +49,7 @@ def main():
             baffle.update()
 
             # 更新弹球的坐标
-            gf.update_ball(sets, stats, screen, baffle, ball, level_board)
+            gf.update_ball(sets, stats, screen, baffle, ball, level_board, music)
 
         # 更新画面
         gf.update_screen(sets, stats, screen, baffle, ball, retry_butn, level_board)
