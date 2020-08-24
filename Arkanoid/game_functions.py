@@ -115,13 +115,15 @@ def update_ball(sets, stats, screen, baffle, ball, level_board, music):
 
     # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
-        sets.ball_speed_factor[1] *= sets.reverse_direction
+        # sets.ball_speed_factor[1] *= sets.reverse_direction
+        collision_ball_baffle(sets, ball, baffle)
         music.collid_baffle.play()
 
     # 检测弹球与砖块的碰撞
     collisions = check_ball_brick_collide(sets, ball)
     if collisions:
-        sets.ball_speed_factor[1] *= sets.reverse_direction
+        # sets.ball_speed_factor[1] *= sets.reverse_direction
+        collision_ball_blocks(sets, ball, collisions[0])
         music.collid_brick.play()
 
     if len(sets.brick_list) == 0:
@@ -163,6 +165,41 @@ def ball_out_of_game(stats, baffle, ball, level_board, music):
         music.game_over.play()
         sleep(1)
         pygame.mouse.set_visible(True)
+
+
+def collision_ball_baffle(sets, ball, baffle):
+    """弹球和挡板碰撞的范围"""
+    # y 轴方向速度反向
+    sets.ball_speed_factor[1] = -abs(sets.ball_speed_factor[1])
+
+    # 弹球及挡板
+    ball_x = ball.rect.x + ball.rect.w/2
+    baffle_x = baffle.rect.x + baffle.rect.w/2
+
+    # x 轴方向速度的设置
+    if ball_x < baffle_x:
+        sets.ball_speed_factor[0] = -abs(sets.ball_speed_factor[0])
+    else:
+        sets.ball_speed_factor[0] = abs(sets.ball_speed_factor[0])
+
+
+def collision_ball_blocks(sets, ball, block):
+    """检测小球与砖块的碰撞"""
+    bx = ball.rect.x + ball.rect.w/2
+    by = ball.rect.y + ball.rect.h/2
+
+    #碰撞后小球的速度方向的设置
+    if bx > block.rect.x + ball.rect.w/2 and bx < block.rect.x + block.rect.w - ball.rect.w/2:
+        if by < block.rect.y + block.rect.h:
+            sets.ball_speed_factor[1] = -abs(sets.ball_speed_factor[1])
+        else:
+            sets.ball_speed_factor[1] = abs(sets.ball_speed_factor[1])
+    elif bx < block.rect.x + ball.rect.w/2:
+        sets.ball_speed_factor[0] = -abs(sets.ball_speed_factor[0])
+    elif bx > block.rect.x + block.rect.w - ball.rect.w/2:
+        sets.ball_speed_factor[0] = abs(sets.ball_speed_factor[0])
+    else:
+        sets.ball_speed_factor[1] *= -1
 
 
 def check_ball_brick_collide(sets, ball):
