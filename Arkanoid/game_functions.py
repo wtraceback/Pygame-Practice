@@ -111,7 +111,7 @@ def update_ball(sets, stats, screen, baffle, ball, level_board, music):
 
     # 弹球出界后，重置游戏
     if ball.rect.top > sets.screen_height:
-        ball_out_of_game(stats, baffle, ball, level_board, music)
+        ball_out_of_game(sets, stats, baffle, ball, level_board, music)
 
     # 检测弹球与挡板的碰撞
     if collided(ball, baffle):
@@ -145,7 +145,7 @@ def start_new_level(sets, stats, screen, baffle, ball, level_board):
     create_brick_group(sets, stats, screen)
 
 
-def ball_out_of_game(stats, baffle, ball, level_board, music):
+def ball_out_of_game(sets, stats, baffle, ball, level_board, music):
     """弹球出界后，重置游戏"""
     if stats.life_left > 0:
         # 游戏可用的生命数减一
@@ -155,6 +155,9 @@ def ball_out_of_game(stats, baffle, ball, level_board, music):
         # 初始化挡板和弹球的位置
         baffle.center_baffle()
         ball.reset_ball()
+        
+        # 恢复弹球最开始的移动方向
+        sets.init_dynamic_sets()
 
         # 暂停 0.5 秒
         sleep(0.5)
