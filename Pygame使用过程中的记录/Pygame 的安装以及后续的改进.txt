@@ -1,0 +1,11 @@
+在 Windows 系统中安装 Pygame
+    在 http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame 网站中查找与系统运行的 Python 版本匹配的 Windows 安装程序。
+
+        下载文件后，如果是 .exe 文件，直接运行它
+        如果该文件的扩展名为 .whl， 就将它复制到 Pygame 的项目文件夹中，然后通过命令窗口切换到当前目录，并运行以下命令来安装它：
+            python -m pip install --user pygame-1.9.2-cp35-cp35m-win_amd64.whl
+
+
+有待改善的地方
+    1. 使用 Python 的 虚拟环境 模块，创建虚拟环境并在其中安装好 Pygame
+    2. 使用 py2exe 写一个脚本进行打包，生成 exe 文件
